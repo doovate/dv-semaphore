@@ -6,12 +6,12 @@ services:
             POSTGRES_PASSWORD: 11vicented
             POSTGRES_DB: semaphor
         volumes:
-            - semaphore_postgres:/var/lib/postgresql/data
+            - semaphore_postgres:/var/lib/postgresql
         networks:
             - semaphore_network
     semaphore:
         ports:
-            - 3000:3000
+            - "3000:3000"
         depends_on:
             - postgres
         image: public.ecr.aws/semaphore/pro/server:v2.16.43
@@ -25,8 +25,6 @@ services:
             SEMAPHORE_ADMIN_PASSWORD: admin
             SEMAPHORE_ADMIN_NAME: admin
             SEMAPHORE_ADMIN_EMAIL: admin@doovate.com
-            SEMAPHORE_USE_REMOTE_RUNNER: "True"
-            SEMAPHORE_RUNNER_REGISTRATION_TOKEN: "YX6dVRjvaAv1qXh2T3aO9hFsPeqrqJUSOm9lWAdmLrA="
         volumes:
             - semaphore_data:/var/lib/semaphore
             - semaphore_config:/etc/semaphore
@@ -40,6 +38,7 @@ volumes:
     semaphore_postgres:
 networks:
     semaphore_network: {driver: "bridge"}
+
 
     semaphore_postgres:
 networks:
