@@ -1,0 +1,43 @@
+services:
+    postgres:
+        image: postgres
+        environment:
+            POSTGRES_USER: admin
+            POSTGRES_PASSWORD: 11vicented
+            POSTGRES_DB: semaphor
+        volumes:
+            - semaphore_postgres:/var/lib/postgresql/data
+        networks:
+            - semaphore_network
+    semaphore:
+        ports:
+            - 3000:4000
+        depends_on:
+            - postgres
+        image: public.ecr.aws/semaphore/pro/server:v2.16.43
+        environment:
+            SEMAPHORE_DB_DIALECT: postgres
+            SEMAPHORE_DB_HOST: postgres
+            SEMAPHORE_DB_NAME: semaphor
+            SEMAPHORE_DB_USER: admin
+            SEMAPHORE_DB_PASS: 11vicented
+            SEMAPHORE_ADMIN: admin
+            SEMAPHORE_ADMIN_PASSWORD: admin
+            SEMAPHORE_ADMIN_NAME: admin
+            SEMAPHORE_ADMIN_EMAIL: admin@doovate.com
+            SEMAPHORE_USE_REMOTE_RUNNER: "True"
+            SEMAPHORE_RUNNER_REGISTRATION_TOKEN: "YX6dVRjvaAv1qXh2T3aO9hFsPeqrqJUSOm9lWAdmLrA="
+            SEMAPHORE_PORT: "4000"
+        volumes:
+            - semaphore_data:/var/lib/semaphore
+            - semaphore_config:/etc/semaphore
+            - semaphore_tmp:/tmp/semaphore
+        networks:
+            - semaphore_network
+volumes:
+    semaphore_data:
+    semaphore_config:
+    semaphore_tmp:
+    semaphore_postgres:
+networks:
+    semaphore_network: {driver: "bridge"}
