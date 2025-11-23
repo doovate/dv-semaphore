@@ -1,30 +1,33 @@
 services:
     postgres:
-        image: postgres
+        image: postgres:18
+        container_name: semaphore_db
         environment:
-            POSTGRES_USER: admin
-            POSTGRES_PASSWORD: 11vicented
-            POSTGRES_DB: semaphor
+            POSTGRES_USER: ${POSTGRES_USER}
+            POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+            POSTGRES_DB: ${POSTGRES_DB}
         volumes:
             - semaphore_postgres:/var/lib/postgresql
         networks:
             - semaphore_network
     semaphore:
+        image: public.ecr.aws/semaphore/pro/server:v2.16.43
+        container_name: semaphore
         ports:
             - "4000:3000"
         depends_on:
             - postgres
-        image: public.ecr.aws/semaphore/pro/server:v2.16.43
         environment:
             SEMAPHORE_DB_DIALECT: postgres
             SEMAPHORE_DB_HOST: postgres
-            SEMAPHORE_DB_NAME: semaphor
-            SEMAPHORE_DB_USER: admin
-            SEMAPHORE_DB_PASS: 11vicented
-            SEMAPHORE_ADMIN: admin
-            SEMAPHORE_ADMIN_PASSWORD: admin
-            SEMAPHORE_ADMIN_NAME: admin
-            SEMAPHORE_ADMIN_EMAIL: admin@doovate.com
+            SEMAPHORE_DB_NAME: ${POSTGRES_DB}
+            SEMAPHORE_DB_USER: ${POSTGRES_USER}
+            SEMAPHORE_DB_PASS: ${POSTGRES_PASSWORD}
+            SEMAPHORE_ADMIN: ${SEMAPHORE_ADMIN}
+            SEMAPHORE_ADMIN_PASSWORD: ${SEMAPHORE_ADMIN_PASSWORD}
+            SEMAPHORE_ADMIN_NAME: ${SEMAPHORE_ADMIN_NAME}
+            SEMAPHORE_ADMIN_EMAIL: ${SEMAPHORE_ADMIN_EMAIL}
+            SEMAPHORE_ACCESS_KEY_ENCRYPTION: ${SEMAPHORE_ACCESS_KEY_ENCRYPTION}
         volumes:
             - semaphore_data:/var/lib/semaphore
             - semaphore_config:/etc/semaphore
