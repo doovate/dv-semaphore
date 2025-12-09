@@ -30,9 +30,6 @@ services:
       SEMAPHORE_ADMIN_NAME: ${SEMAPHORE_ADMIN_NAME}
       SEMAPHORE_ADMIN_EMAIL: ${SEMAPHORE_ADMIN_EMAIL}
       SEMAPHORE_ACCESS_KEY_ENCRYPTION: ${SEMAPHORE_ACCESS_KEY_ENCRYPTION}
-      SEMAPHORE_GOTIFY_ALERT: "True"
-      SEMAPHORE_GOTIFY_URL: "http://192.168.24.50:8080"
-      SEMAPHORE_GOTIFY_TOKEN: ${SEMAPHORE_GOTIFY_TOKEN}
     volumes:
       - semaphore_data:/var/lib/semaphore
       - semaphore_config:/etc/semaphore
