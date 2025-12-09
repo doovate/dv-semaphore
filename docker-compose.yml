@@ -1,46 +1,49 @@
 services:
-    postgres:
-        image: postgres:18
-        container_name: semaphore_db
-        environment:
-            POSTGRES_USER: ${POSTGRES_USER}
-            POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-            POSTGRES_DB: ${POSTGRES_DB}
-        volumes:
-            - semaphore_postgres:/var/lib/postgresql
-        networks:
-            - semaphore_network
-    semaphore:
-        build:
-          context: .
-#        image: public.ecr.aws/semaphore/pro/server:v2.16.43
-        container_name: semaphore
-        ports:
-            - "4000:3000"
-        depends_on:
-            - postgres
-        environment:
-            SEMAPHORE_DB_DIALECT: postgres
-            SEMAPHORE_DB_HOST: postgres
-            SEMAPHORE_DB_NAME: ${POSTGRES_DB}
-            SEMAPHORE_DB_USER: ${POSTGRES_USER}
-            SEMAPHORE_DB_PASS: ${POSTGRES_PASSWORD}
-            SEMAPHORE_ADMIN: ${SEMAPHORE_ADMIN}
-            SEMAPHORE_ADMIN_PASSWORD: ${SEMAPHORE_ADMIN_PASSWORD}
-            SEMAPHORE_ADMIN_NAME: ${SEMAPHORE_ADMIN_NAME}
-            SEMAPHORE_ADMIN_EMAIL: ${SEMAPHORE_ADMIN_EMAIL}
-            SEMAPHORE_ACCESS_KEY_ENCRYPTION: ${SEMAPHORE_ACCESS_KEY_ENCRYPTION}
-        volumes:
-            - semaphore_data:/var/lib/semaphore
-            - semaphore_config:/etc/semaphore
-            - semaphore_tmp:/tmp/semaphore
-        networks:
-            - semaphore_network
-        restart: unless-stopped
+  postgres:
+    image: postgres:18
+    container_name: semaphore_db
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - semaphore_postgres:/var/lib/postgresql
+    networks:
+      - semaphore_network
+  semaphore:
+    build:
+      context: .
+    #        image: public.ecr.aws/semaphore/pro/server:v2.16.43
+    container_name: semaphore
+    ports:
+      - "4000:3000"
+    depends_on:
+      - postgres
+    environment:
+      SEMAPHORE_DB_DIALECT: postgres
+      SEMAPHORE_DB_HOST: postgres
+      SEMAPHORE_DB_NAME: ${POSTGRES_DB}
+      SEMAPHORE_DB_USER: ${POSTGRES_USER}
+      SEMAPHORE_DB_PASS: ${POSTGRES_PASSWORD}
+      SEMAPHORE_ADMIN: ${SEMAPHORE_ADMIN}
+      SEMAPHORE_ADMIN_PASSWORD: ${SEMAPHORE_ADMIN_PASSWORD}
+      SEMAPHORE_ADMIN_NAME: ${SEMAPHORE_ADMIN_NAME}
+      SEMAPHORE_ADMIN_EMAIL: ${SEMAPHORE_ADMIN_EMAIL}
+      SEMAPHORE_ACCESS_KEY_ENCRYPTION: ${SEMAPHORE_ACCESS_KEY_ENCRYPTION}
+      SEMAPHORE_GOTIFY_ALERT: "True"
+      SEMAPHORE_GOTIFY_URL: "http://192.168.24.50:8080"
+      SEMAPHORE_GOTIFY_TOKEN: ${SEMAPHORE_GOTIFY_TOKEN}
+    volumes:
+      - semaphore_data:/var/lib/semaphore
+      - semaphore_config:/etc/semaphore
+      - semaphore_tmp:/tmp/semaphore
+    networks:
+      - semaphore_network
+    restart: unless-stopped
 volumes:
-    semaphore_data:
-    semaphore_config:
-    semaphore_tmp:
-    semaphore_postgres:
+  semaphore_data:
+  semaphore_config:
+  semaphore_tmp:
+  semaphore_postgres:
 networks:
-    semaphore_network: {driver: "bridge"}
+  semaphore_network: { driver: "bridge" }
